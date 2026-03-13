@@ -172,11 +172,12 @@ class SignalingService {
    */
   sendICECandidate(
     roomId: string,
+    toUserId: string,
     candidate: string,
     sdpMid: string,
     sdpMLineIndex: number
   ): void {
-    this.socket?.emit('ice_candidate', { roomId, candidate, sdpMid, sdpMLineIndex });
+    this.socket?.emit('ice_candidate', { roomId, toUserId, candidate, sdpMid, sdpMLineIndex });
   }
 
   /**

@@ -24,16 +24,14 @@ export function useSignaling(
   webRTCHandlers?: WebRTCHandlers,
   onPeerInitiate?: (userId: string) => void
 ) {
-  const {
-    userId,
-    roomId: storeRoomId,
-    displayName,
-    setConnectionStatus,
-    addParticipant,
-    removeParticipant,
-    updateParticipant,
-    mode,
-  } = useMeetingStore();
+  const userId = useMeetingStore((s) => s.userId);
+  const storeRoomId = useMeetingStore((s) => s.roomId);
+  const displayName = useMeetingStore((s) => s.displayName);
+  const setConnectionStatus = useMeetingStore((s) => s.setConnectionStatus);
+  const addParticipant = useMeetingStore((s) => s.addParticipant);
+  const removeParticipant = useMeetingStore((s) => s.removeParticipant);
+  const updateParticipant = useMeetingStore((s) => s.updateParticipant);
+  const mode = useMeetingStore((s) => s.mode);
 
   const connectedRef = useRef(false);
 
@@ -106,8 +104,7 @@ export function useSignaling(
           isMuted: false,
           isCameraOff: false,
         });
-        // Initiate WebRTC offer to the new peer
-        onPeerInitiateRef.current?.(data.userId);
+        // We do NOT initiate here. The new joiner will initiate with us.
       },
 
 
@@ -142,5 +139,5 @@ export function useSignaling(
       signalingService.disconnect();
       setConnectionStatus('disconnected');
     };
-  }, [roomId, userId, displayName, setConnectionStatus, addParticipant, removeParticipant]);
+  }, [roomId, userId, setConnectionStatus, addParticipant, removeParticipant, updateParticipant]);
 }

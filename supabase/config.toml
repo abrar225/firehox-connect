@@ -322,7 +322,6 @@ enabled = true
 client_id = "env(GOOGLE_CLIENT_ID)"
 secret = "env(GOOGLE_CLIENT_SECRET)"
 # Google requires skip_nonce_check = true for some flows
-
 skip_nonce_check = true
 
 

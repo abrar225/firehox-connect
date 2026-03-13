@@ -205,41 +205,72 @@ roomsNamespace.on('connection', (socket) => {
   });
 
   // WebRTC signaling relay — offer
-  socket.on('webrtc_offer', (data: { toUserId: string; sdp: string; roomId: string }) => {
+  socket.on('webrtc_offer', async (data: { toUserId: string; sdp: string; roomId: string }) => {
     const user = socketToUser.get(socket.id);
     if (!user) return;
 
-    socket.to(data.roomId).emit('webrtc_offer', {
-      fromUserId: user.userId,
-      sdp: data.sdp,
-      fromSocketId: socket.id,
+    // Find the target socket ID for the given toUserId in this room
+    const targetSession = await prisma.participantSession.findFirst({
+      where: {
+        room: { room_code: data.roomId },
+        user_id: data.toUserId,
+        connection_status: 'connected'
+      }
     });
+
+    if (targetSession) {
+      roomsNamespace.to(targetSession.socket_id).emit('webrtc_offer', {
+        fromUserId: user.userId,
+        sdp: data.sdp,
+        fromSocketId: socket.id,
+      });
+    }
   });
 
   // WebRTC signaling relay — answer
-  socket.on('webrtc_answer', (data: { toUserId: string; sdp: string; roomId: string }) => {
+  socket.on('webrtc_answer', async (data: { toUserId: string; sdp: string; roomId: string }) => {
     const user = socketToUser.get(socket.id);
     if (!user) return;
 
-    socket.to(data.roomId).emit('webrtc_answer', {
-      fromUserId: user.userId,
-      sdp: data.sdp,
-      fromSocketId: socket.id,
+    const targetSession = await prisma.participantSession.findFirst({
+      where: {
+        room: { room_code: data.roomId },
+        user_id: data.toUserId,
+        connection_status: 'connected'
+      }
     });
+
+    if (targetSession) {
+      roomsNamespace.to(targetSession.socket_id).emit('webrtc_answer', {
+        fromUserId: user.userId,
+        sdp: data.sdp,
+        fromSocketId: socket.id,
+      });
+    }
   });
 
   // ICE candidate relay
-  socket.on('ice_candidate', (data: { candidate: string; sdpMid: string; sdpMLineIndex: number; roomId: string }) => {
+  socket.on('ice_candidate', async (data: { toUserId: string; candidate: string; sdpMid: string; sdpMLineIndex: number; roomId: string }) => {
     const user = socketToUser.get(socket.id);
     if (!user) return;
 
-    socket.to(data.roomId).emit('ice_candidate', {
-      fromUserId: user.userId,
-      candidate: data.candidate,
-      sdpMid: data.sdpMid,
-      sdpMLineIndex: data.sdpMLineIndex,
-      fromSocketId: socket.id,
+    const targetSession = await prisma.participantSession.findFirst({
+      where: {
+        room: { room_code: data.roomId },
+        user_id: data.toUserId,
+        connection_status: 'connected'
+      }
     });
+
+    if (targetSession) {
+      roomsNamespace.to(targetSession.socket_id).emit('ice_candidate', {
+        fromUserId: user.userId,
+        candidate: data.candidate,
+        sdpMid: data.sdpMid,
+        sdpMLineIndex: data.sdpMLineIndex,
+        fromSocketId: socket.id,
+      });
+    }
   });
 
   // Mode update relay
@@ -278,6 +309,8 @@ roomsNamespace.on('connection', (socket) => {
         });
 
         // 3. Mark room inactive if empty
+        // NOTE: Commented out for now to allow hosts to refresh/return without killing the room.
+        /*
         const activeCount = await prisma.participantSession.count({
           where: { room_id: roomDbId, connection_status: 'connected' },
         });
@@ -289,6 +322,7 @@ roomsNamespace.on('connection', (socket) => {
           });
           console.log(`[Signaling] DB Room ${roomId} marked inactive (empty)`);
         }
+        */
       } catch (error) {
         console.error('[Signaling] Disconnect DB error:', error);
       }
