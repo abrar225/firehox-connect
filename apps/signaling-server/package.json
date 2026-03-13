@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "@firehox/database": "workspace:^",
-    "cors": "^2.8.5",
-    "express": "4.19.2",
+    "cors": "^2.8.6",
+    "express": "4.22.1",
     "shared-types": "workspace:*",
-    "socket.io": "4.7.5"
+    "socket.io": "4.8.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
