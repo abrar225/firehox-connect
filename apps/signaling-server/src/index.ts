@@ -8,6 +8,8 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
+import { prisma } from '@firehox/database';
+
 
 const PORT = process.env.PORT || 3001;
 
@@ -98,7 +100,6 @@ const io = new SocketIOServer(httpServer, {
   path: '/ws',
 });
 
-import { prisma } from '@firehox/database';
 
 const roomsNamespace = io.of('/rooms');
 
@@ -180,7 +181,7 @@ roomsNamespace.on('connection', (socket) => {
         },
       });
 
-      const peers = existingPeers.map((p) => ({
+      const peers = existingPeers.map((p: any) => ({
         userId: p.user_id,
         socketId: p.socket_id,
         displayName: p.user?.optional_display_name || 'Guest',
