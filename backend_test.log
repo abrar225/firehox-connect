@@ -1,0 +1,36 @@
+
+> signaling-server@0.1.0 dev /Users/abrarakhunji/Desktop/Connect/firehox-connect/apps/signaling-server
+> tsx watch src/index.ts
+
+
+🔥 FireHox Connect Signaling Server
+   Health:    http://localhost:3001/health
+   Socket.IO: ws://localhost:3001/ws
+   Namespace: /rooms
+
+[Signaling] Socket connected: ruyhDApwn9GAxU3AAAAB
+[Signaling] Join error: PrismaClientKnownRequestError: 
+Invalid `prisma.room.upsert()` invocation in
+/Users/abrarakhunji/Desktop/Connect/firehox-connect/apps/signaling-server/src/index.ts:63:38
+
+  60 
+  61 try {
+  62   // 1. Ensure Room exists in DB (simulate POST /api/rooms creation on first join for Phase 1)
+→ 63   const room = await prisma.room.upsert(
+The provided value for the column is too long for the column's type. Column: (not available)
+    at In.handleRequestError (/Users/abrarakhunji/Desktop/Connect/firehox-connect/packages/database/client/runtime/library.js:122:6854)
+    at In.handleAndLogRequestError (/Users/abrarakhunji/Desktop/Connect/firehox-connect/packages/database/client/runtime/library.js:122:6188)
+    at In.request (/Users/abrarakhunji/Desktop/Connect/firehox-connect/packages/database/client/runtime/library.js:122:5896)
+    at async l (/Users/abrarakhunji/Desktop/Connect/firehox-connect/packages/database/client/runtime/library.js:127:11167)
+    at async Socket.<anonymous> (/Users/abrarakhunji/Desktop/Connect/firehox-connect/apps/signaling-server/src/index.ts:63:20) {
+  code: 'P2000',
+  clientVersion: '5.13.0',
+  meta: { modelName: 'Room', column_name: '(not available)' }
+}
+[Signaling] Socket connected: LCfls3TC8puUr8fAAAAD
+[Signaling] User 03231c96-cf49-473a-8659-cc38dac2ad0f (AliceTest) joined DB room test-db-123
+[Signaling] Socket connected: waIQLb9tmtURVrqrAAAF
+[Signaling] User 96e49e0c-809a-4d1e-8112-836d3208ddc8 (BobTest) joined DB room test-db-123
+[Signaling] User 03231c96-cf49-473a-8659-cc38dac2ad0f disconnected from DB room test-db-123
+[Signaling] DB Room test-db-123 marked inactive (empty)
+[Signaling] User 96e49e0c-809a-4d1e-8112-836d3208ddc8 disconnected from DB room test-db-123

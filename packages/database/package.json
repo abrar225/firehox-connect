@@ -1,0 +1,1 @@
+{"name":"@firehox/database","version":"0.1.0","private":true,"main":"index.ts","dependencies":{"@prisma/client":"^5.13.0","prisma":"^5.13.0"}}
