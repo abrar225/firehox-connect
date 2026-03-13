@@ -51,7 +51,7 @@ export default function LandingPage() {
       if (!res.ok) throw new Error('Failed to create meeting');
       const data = await res.json();
       router.push(`/room/${data.roomCode}/lobby`);
-    } catch (err) {
+    } catch {
       setError('Could not create meeting. Signaling server might be down.');
     }
   };
@@ -72,7 +72,7 @@ export default function LandingPage() {
         return;
       }
       router.push(`/room/${code}/lobby`);
-    } catch (err) {
+    } catch {
       setError('Could not verify meeting. Signaling server might be down.');
     }
   };

@@ -139,5 +139,5 @@ export function useSignaling(
       signalingService.disconnect();
       setConnectionStatus('disconnected');
     };
-  }, [roomId, userId, setConnectionStatus, addParticipant, removeParticipant, updateParticipant]);
+  }, [roomId, userId, setConnectionStatus, addParticipant, removeParticipant, updateParticipant, displayName, mode]);
 }

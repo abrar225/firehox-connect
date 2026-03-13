@@ -73,7 +73,8 @@ export const AvatarRenderer = memo(function AvatarRenderer({
 
   // Initialize Three.js scene
   useEffect(() => {
-    if (!containerRef.current || initedRef.current) return;
+    const currentContainer = containerRef.current;
+    if (!currentContainer || initedRef.current) return;
     initedRef.current = true;
 
     // Scene
@@ -195,8 +196,8 @@ export const AvatarRenderer = memo(function AvatarRenderer({
       geometry.dispose();
       material.dispose();
       renderer.dispose();
-      if (containerRef.current && renderer.domElement.parentNode === containerRef.current) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (currentContainer && renderer.domElement.parentNode === currentContainer) {
+        currentContainer.removeChild(renderer.domElement);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
