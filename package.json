@@ -5,7 +5,7 @@
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:signaling": "pnpm --filter signaling-server dev",
     "dev": "pnpm run dev:frontend & pnpm run dev:signaling",
-    "build": "pnpm -r build",
+    "build": "pnpm --filter database generate && pnpm -r build",
     "lint": "pnpm -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",

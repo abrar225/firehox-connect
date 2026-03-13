@@ -21,7 +21,7 @@ app.use(express.json());
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: Date.now() });
+  res.status(200).send('ok');
 });
 
 // -----------------------------------------------------------------------------
