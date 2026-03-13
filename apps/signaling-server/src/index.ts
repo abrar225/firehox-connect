@@ -8,7 +8,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
-import { prisma } from '@firehox/database';
+import { prisma, ParticipantSession, User } from '@firehox/database';
 
 
 const PORT = process.env.PORT || 3001;
@@ -181,7 +181,7 @@ roomsNamespace.on('connection', (socket) => {
         },
       });
 
-      const peers = existingPeers.map((p: any) => ({
+      const peers = existingPeers.map((p: ParticipantSession & { user: User | null }) => ({
         userId: p.user_id,
         socketId: p.socket_id,
         displayName: p.user?.optional_display_name || 'Guest',
