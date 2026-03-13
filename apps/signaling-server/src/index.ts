@@ -11,7 +11,7 @@ import cors from 'cors';
 import { prisma, ParticipantSession, User } from '@firehox/database';
 
 
-const PORT = Number(process.env.PORT) || 8080;
+const PORT = process.env.PORT || 3001;
 
 // -----------------------------------------------------------------------------
 // 1. Express HTTP Server
@@ -337,10 +337,7 @@ roomsNamespace.on('connection', (socket) => {
 // 4. Start Server
 // -----------------------------------------------------------------------------
 
-httpServer.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n🔥 FireHox Connect Signaling Server`);
-  console.log(`   Internal Port: ${PORT}`);
-  console.log(`   Health:        http://0.0.0.0:${PORT}/health`);
-  console.log(`   Socket.IO:     ws://0.0.0.0:${PORT}/ws`);
-  console.log(`   Namespace:     /rooms\n`);
+httpServer.listen(Number(PORT), '0.0.0.0', () => {
+  console.log(`🔥 FireHox Connect Signaling Server`);
+  console.log(`Server running on port ${PORT}`);
 });
