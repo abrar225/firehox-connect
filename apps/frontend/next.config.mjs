@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['shared-types'],
-  turbopack: {},
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Prevent webpack from bundling MediaPipe WASM packages.
