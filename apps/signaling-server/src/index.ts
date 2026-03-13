@@ -337,7 +337,7 @@ roomsNamespace.on('connection', (socket) => {
 // 4. Start Server
 // -----------------------------------------------------------------------------
 
-httpServer.listen(Number(PORT), '0.0.0.0', () => {
-  console.log(`🔥 FireHox Connect Signaling Server`);
+httpServer.listen(PORT as any, "0.0.0.0", () => {
+  console.log("🔥 FireHox Connect Signaling Server");
   console.log(`Server running on port ${PORT}`);
 });
