@@ -92,7 +92,7 @@ export function useRoomFaceMesh(
         setIsModelLoaded(true);
 
         // Detection loop at ~30fps
-        async function detectFrame() {
+        const detectFrame = async () => {
           if (!activeRef.current) return;
           if (video.readyState >= 2 && !video.paused) {
             try {
@@ -102,7 +102,7 @@ export function useRoomFaceMesh(
             }
           }
           rafRef.current = requestAnimationFrame(detectFrame);
-        }
+        };
 
         rafRef.current = requestAnimationFrame(detectFrame);
       } catch (err) {

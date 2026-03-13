@@ -96,7 +96,7 @@ export function useFaceMesh(
         setIsModelLoaded(true);
 
         // RAF detection loop
-        async function detectFrame() {
+        const detectFrame = async () => {
           if (!activeRef.current) return;
           const video = videoRef.current;
           if (video && video.readyState >= 2 && !video.paused) {
@@ -107,7 +107,7 @@ export function useFaceMesh(
             }
           }
           rafRef.current = requestAnimationFrame(detectFrame);
-        }
+        };
 
         rafRef.current = requestAnimationFrame(detectFrame);
       } catch (err) {
