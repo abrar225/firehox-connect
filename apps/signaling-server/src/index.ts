@@ -337,9 +337,10 @@ roomsNamespace.on('connection', (socket) => {
 // 4. Start Server
 // -----------------------------------------------------------------------------
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🔥 FireHox Connect Signaling Server`);
-  console.log(`   Health:    http://localhost:${PORT}/health`);
-  console.log(`   Socket.IO: ws://localhost:${PORT}/ws`);
-  console.log(`   Namespace: /rooms\n`);
+  console.log(`   Internal Port: ${PORT}`);
+  console.log(`   Health:        http://0.0.0.0:${PORT}/health`);
+  console.log(`   Socket.IO:     ws://0.0.0.0:${PORT}/ws`);
+  console.log(`   Namespace:     /rooms\n`);
 });

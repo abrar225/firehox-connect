@@ -5,6 +5,7 @@
     "buildCommand": "pnpm install --frozen-lockfile && pnpm --filter database generate && pnpm --filter database build && pnpm --filter signaling-server build"
   },
   "deploy": {
+    "port": 3001,
     "startCommand": "pnpm --filter signaling-server start",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
