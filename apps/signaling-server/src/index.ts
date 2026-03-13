@@ -11,7 +11,7 @@ import cors from 'cors';
 import { prisma, ParticipantSession, User } from '@firehox/database';
 
 
-const PORT = Number(process.env.PORT) || 3001;
+const PORT = Number(process.env.PORT) || 8080;
 
 // -----------------------------------------------------------------------------
 // 1. Express HTTP Server
