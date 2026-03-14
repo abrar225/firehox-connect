@@ -57,12 +57,19 @@ export default function LandingPage() {
   };
 
   const handleJoinMeeting = async () => {
-    const code = roomCode.trim();
+    let code = roomCode.trim();
     if (!code) {
       setError('Please enter a room code');
       return;
     }
     setError('');
+
+    // Extract room code if full URL is pasted
+    const match = code.match(/\/room\/([a-zA-Z0-9]+)/);
+    if (match && match[1]) {
+      code = match[1];
+    }
+    
     const signalingUrl = process.env.NEXT_PUBLIC_SIGNALING_URL || 'http://localhost:3001';
 
     try {
