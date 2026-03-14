@@ -21,6 +21,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Basic root route
+app.get('/', (_req, res) => {
+  res.status(200).send('🔥 FireHox Connect Signaling Server is running.');
+});
+
 // Health check endpoint
 app.get('/health', (_req, res) => {
   res.status(200).send('ok');
