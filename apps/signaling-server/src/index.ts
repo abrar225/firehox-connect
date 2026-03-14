@@ -18,8 +18,24 @@ const PORT = process.env.PORT || 3001;
 // -----------------------------------------------------------------------------
 
 const app = express();
-app.use(cors());
+
+// Request logging middleware
+app.use((req, _res, next) => {
+  console.log(`[HTTP] ${req.method} ${req.path}`);
+  next();
+});
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*',
+  methods: ['GET', 'POST'],
+}));
 app.use(express.json());
+
+// Global error handler for Express
+app.use((err: any, _req: any, res: any, _next: any) => {
+  console.error('[Signaling] Unhandled Express error:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
 
 // Basic root route
 app.get('/', (_req, res) => {
@@ -39,19 +55,26 @@ app.get('/health', (_req, res) => {
 app.post('/api/rooms', async (req, res) => {
   try {
     const { userId } = req.body;
-    if (!userId) return res.status(400).json({ error: 'userId is required' });
+    console.log(`[Signaling] Creating room for user: ${userId}`);
+    
+    if (!userId) {
+      console.warn('[Signaling] Room creation failed: userId is missing');
+      return res.status(400).json({ error: 'userId is required' });
+    }
 
     // Generate a 12-character alphanumeric room code
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
     const roomCode = Array.from({ length: 12 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
     
     // Ensure User exists before creating room
+    console.log(`[Signaling] Upserting user: ${userId}`);
     await prisma.user.upsert({
       where: { id: userId },
       update: { last_seen: new Date() },
       create: { id: userId },
     });
 
+    console.log(`[Signaling] Creating room entry with code: ${roomCode}`);
     const room = await prisma.room.create({
       data: {
         room_code: roomCode,
@@ -61,10 +84,11 @@ app.post('/api/rooms', async (req, res) => {
       },
     });
 
+    console.log(`[Signaling] Room created successfully: ${room.room_code}`);
     res.json({ roomCode: room.room_code });
   } catch (error) {
     console.error('[Signaling] Error creating room:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}` });
   }
 });
 
@@ -99,14 +123,18 @@ const httpServer = createServer(app);
 
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || '*', // Allow any origin if not specified
     methods: ['GET', 'POST'],
+    credentials: true
   },
   path: '/ws',
+  allowEIO3: true // Support older clients just in case
 });
 
 
 const roomsNamespace = io.of('/rooms');
+
+console.log('[Signaling] Socket.IO initialized with path /ws and namespace /rooms');
 
 // We still need a quick way to look up who a socket is for WebRTC relay 
 // without querying DB on every single ICE candidate (for performance).
